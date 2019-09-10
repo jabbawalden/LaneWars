@@ -20,14 +20,19 @@ public class GameManager : MonoBehaviour
     private float defaultHealth;
     private float upgradedHealth;
 
-    //UNITCOUNT
+    //UNIT COUNT
     [SerializeField] private List<LaneController> blueLanes;
     [SerializeField] private List<LaneController> orangeLanes;
+
+    //SCRIPTS
+    private AIController aiController;
      
     private void Awake()
     {
-        defaultSpeed = 0.6f;
-        upgradedSpeed = 1.1f;
+        aiController = FindObjectOfType<AIController>();
+
+        defaultSpeed = 0.45f;
+        upgradedSpeed = 0.7f;
 
         defaultHealth = 1;
         upgradedHealth = 2;
@@ -43,6 +48,7 @@ public class GameManager : MonoBehaviour
     {
         OrangeSpeed = upgradedSpeed;
         BlueSpeed = defaultSpeed;
+        aiController.SetUpgradeBool(1, false);
         GameEvents.ReportChangeSpeeds();
     }
 
@@ -50,6 +56,7 @@ public class GameManager : MonoBehaviour
     {
         OrangeSpeed = defaultSpeed;
         BlueSpeed = upgradedSpeed;
+        aiController.SetUpgradeBool(1, true);
         GameEvents.ReportChangeSpeeds();
     }
 
@@ -64,6 +71,7 @@ public class GameManager : MonoBehaviour
     {
         OrangeHealth = upgradedHealth;
         BlueHealth = defaultHealth;
+        aiController.SetUpgradeBool(2, false);
         GameEvents.ReportChangeHealth();
     }
 
@@ -71,6 +79,7 @@ public class GameManager : MonoBehaviour
     {
         OrangeHealth = defaultHealth;
         BlueHealth = upgradedHealth;
+        aiController.SetUpgradeBool(2, true);
         GameEvents.ReportChangeHealth();
     }
 
@@ -85,45 +94,37 @@ public class GameManager : MonoBehaviour
     {
         //blue lanes
         foreach (LaneController laneC in blueLanes)
-        {
-            laneC.additionalSpawn = 1;
-        }
+            laneC.additionalSpawn = 2;
 
         //orange lanes
         foreach (LaneController laneC in orangeLanes)
-        {
             laneC.additionalSpawn = 0;
-        }
+
+        aiController.SetUpgradeBool(3, true);
     }
 
     public void UpgradeOrangeLanes()
     {
         //blue lanes
         foreach (LaneController laneC in blueLanes)
-        {
             laneC.additionalSpawn = 0;
-        }
 
         //orange lanes
         foreach (LaneController laneC in orangeLanes)
-        {
-            laneC.additionalSpawn = 1;
-        }
+            laneC.additionalSpawn = 2;
+
+        aiController.SetUpgradeBool(3, false);
     }
 
     public void ResetAllLanes()
     {
         //blue lanes
         foreach (LaneController laneC in blueLanes)
-        {
             laneC.additionalSpawn = 0;
-        }
 
         //orange lanes
         foreach (LaneController laneC in orangeLanes)
-        {
             laneC.additionalSpawn = 0;
-        }
     }
 
 }

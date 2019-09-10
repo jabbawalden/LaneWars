@@ -10,6 +10,8 @@ public class PlayerMain : MonoBehaviour
     private UIManager uiManager;
     private AIController aiController;
 
+    [System.NonSerialized] public int selectedLaneIndex;
+
     private void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
@@ -19,20 +21,55 @@ public class PlayerMain : MonoBehaviour
 
     private void Start()
     {
-        ChangeLaneAmount(2, lane1, 1);
-        ChangeLaneAmount(2, lane2, 2);
-        ChangeLaneAmount(2, lane3, 3);
+        ChangeLaneAmount(3, lane1, 1);
+        ChangeLaneAmount(3, lane2, 2);
+        ChangeLaneAmount(3, lane3, 3);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            switch (selectedLaneIndex)
+            {
+                case 1:
+                    ChangeLaneOne(true);
+                    break;
+                case 2:
+                    ChangeLaneTwo(true);
+                    break;
+                case 3:
+                    ChangeLaneThree(true);
+                    break;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            switch (selectedLaneIndex)
+            {
+                case 1:
+                    ChangeLaneOne(false);
+                    break;
+                case 2:
+                    ChangeLaneTwo(false);
+                    break;
+                case 3:
+                    ChangeLaneThree(false);
+                    break;
+            }
+        }
     }
 
     public void ChangeLaneAmount(int amount, LaneController chosenLane, int uiIndex)
     {
+        print(amount);
         amountLeft -= amount;
         chosenLane.amount += amount;
         uiManager.SetUnitRemainText(amountLeft);
         uiManager.SetLaneText(chosenLane.amount, uiIndex);
     }
 
-    public void changeLaneOne(bool isAdding) 
+    public void ChangeLaneOne(bool isAdding) 
     {
         aiController.canChange = true;
         if (isAdding && amountLeft != 0)
@@ -43,12 +80,10 @@ public class PlayerMain : MonoBehaviour
         {
             if (lane1.amount > 0)
                 ChangeLaneAmount(-1, lane1, 1);
-            else
-                print("do not deduct");
         }
     }
 
-    public void changeLaneTwo(bool isAdding)
+    public void ChangeLaneTwo(bool isAdding)
     {
         aiController.canChange = true;
         if (isAdding && amountLeft != 0)
@@ -62,7 +97,7 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    public void changeLaneThree(bool isAdding)
+    public void ChangeLaneThree(bool isAdding)
     {
         aiController.canChange = true;
         if (isAdding && amountLeft != 0)

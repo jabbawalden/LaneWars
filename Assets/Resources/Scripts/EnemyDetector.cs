@@ -15,12 +15,9 @@ public class EnemyDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {   
-        
         if(collision.gameObject.layer == layerToCheck)
         {
             ballController.enemies.Add(collision.gameObject);
         }
-        
-
     }
 }

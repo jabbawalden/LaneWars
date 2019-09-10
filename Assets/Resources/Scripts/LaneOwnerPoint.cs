@@ -18,17 +18,40 @@ public class LaneOwnerPoint : MonoBehaviour
 
     private GameManager gameManager;
 
+    [SerializeField] Color orange, blue;
+
+    SpriteRenderer ourRenderPoint;
+
     private void Awake()
     {
         canChange = true;
         gameManager = FindObjectOfType<GameManager>();
+        ourRenderPoint = GetComponentInChildren<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
+        if (ownerType == OwnerType.orangeOwner)
+        {
+            ourRenderPoint.color = blue;
+        }
+        else
+        {
+            ourRenderPoint.color = orange;
+        }
+    }
+
+    private void ChangeColors(Color color)
+    {
+        ourRenderPoint.color = color;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (ownerType == OwnerType.blueOwner)
         {
-            if (collision.gameObject.layer == 9 && canChange)
+            //If blue has passed over the line
+            if (collision.CompareTag("Blue") && canChange)
             {
                 print("blue has taken lane");
                 if (upgradeType == UpgradeType.increaseSpeed)
@@ -45,9 +68,10 @@ public class LaneOwnerPoint : MonoBehaviour
                 }
                 canChange = false;
                 otherLaneOwnerPoint.canChange = true;
+                ChangeColors(blue);
             }
-
-            if (collision.gameObject.layer == 8 && !canChange)
+            //If orange has passed back over the line
+            if (collision.CompareTag("Orange") && !canChange)
             {
                 print("orange has reverted lane");
                 if (upgradeType == UpgradeType.increaseSpeed)
@@ -64,12 +88,14 @@ public class LaneOwnerPoint : MonoBehaviour
                 }
                 canChange = true;
                 otherLaneOwnerPoint.canChange = true;
+                ChangeColors(orange);
             }
         }
 
         if (ownerType == OwnerType.orangeOwner)
         {
-            if (collision.gameObject.layer == 8 && canChange)
+            //If orange has passed over the line
+            if (collision.CompareTag("Orange") && canChange)
             {
                 print("orange has taken lane");
                 if (upgradeType == UpgradeType.increaseSpeed)
@@ -86,9 +112,11 @@ public class LaneOwnerPoint : MonoBehaviour
                 }
                 canChange = false;
                 otherLaneOwnerPoint.canChange = true;
+                ChangeColors(orange);
             }
 
-            if (collision.gameObject.layer == 9 && !canChange)
+            //If blue has passed back over the line
+            if (collision.CompareTag("Blue") && !canChange)
             {
                 print("blue has reverted lane");
                 if (upgradeType == UpgradeType.increaseSpeed)
@@ -105,9 +133,9 @@ public class LaneOwnerPoint : MonoBehaviour
                 }
                 canChange = true;
                 otherLaneOwnerPoint.canChange = true;
+                ChangeColors(blue);
             }
         }
-
     }
 
 }
